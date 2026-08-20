@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=83.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "privacy-filter"
+version = "1.0.0"
+description = "FastAPI and Ray Serve app for openai/privacy-filter."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { file = "LICENSE" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "fastapi==0.133.0",
+    "loguru>=0.7.3",
+    "pydantic==2.11.7",
+    "pydantic_settings==2.10.1",
+    "ray[serve]>=2.49,<3",
+    "starlette==1.2.0",
+    "torch>=2.8,<3",
+    "transformers>=5.15",
+    "uvicorn==0.35.0",
+]
+
+[dependency-groups]
+test = [
+    "pytest==8.4.2",
+]
+lint = [
+    "pre_commit==4.3.0",
+    "ruff==0.14.0",
+    "ty==0.0.29",
+]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+privacy-filter = "privacy_filter.run:main"
+
+[tool.uv]
+required-version = ">=0.9,<0.12"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.ruff.lint]
+select = ["I"]
+
+[tool.pytest.ini_options]
+testpaths = ["src/tests"]
+pythonpath = ["src"]
+
+[tool.ty.rules]
+all = "error"
+
+[tool.ty.src]
+include = ["src/privacy_filter"]
+
+[tool.ty.environment]
+python-version = "3.12"
