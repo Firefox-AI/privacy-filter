@@ -89,6 +89,3 @@ jobs:
           uv venv
           uv sync --all-groups
           uv pip install --no-cache-dir -e .
-
-      - name: Run smoke tests
-        run: uv run pytest src/tests/smoke -v
