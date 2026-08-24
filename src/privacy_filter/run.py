@@ -6,12 +6,10 @@ import os
 from ray import serve
 
 from privacy_filter.core.config import env
-from privacy_filter.core.logger import setup_logger
 from privacy_filter.core.service import deployment
 
 
 def main() -> None:
-    setup_logger()
     serve.start(http_options={"host": env.HOST, "port": env.PORT})
     serve.run(
         deployment,

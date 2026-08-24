@@ -11,7 +11,7 @@ class Env(BaseSettings):
     # Logging
     LOG_JSON: bool = False  # Set to True for GKE deployment
     LOGURU_LEVEL: str = "INFO"
-    LOG_FILE: str = "logs/mlpa.log"
+    LOG_FILE: str = "logs/privacy_filter.log"
     LOG_ROTATION: str = "500 MB"
     LOG_COMPRESSION: str = "zip"
     HTTPX_LOGGING: bool = True

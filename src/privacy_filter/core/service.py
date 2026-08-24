@@ -21,7 +21,7 @@ from privacy_filter.core.classes import (
     Span,
 )
 from privacy_filter.core.config import env
-from privacy_filter.core.logger import logger
+from privacy_filter.core.logger import logger, setup_logger
 from privacy_filter.core.masking import MASK_TOKENS as MASK_TOKENS
 from privacy_filter.core.masking import mask_text as _mask_text
 from privacy_filter.core.utils import authorize_request
@@ -35,6 +35,8 @@ app = FastAPI(title="privacy-filter", version="0.1.0")
 @serve.ingress(app)
 class PrivacyFilterService:
     def __init__(self) -> None:
+        setup_logger()
+
         from transformers import pipeline
 
         logger.info("loading privacy-filter model_id=%s", env.MODEL_ID)
