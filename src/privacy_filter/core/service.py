@@ -7,6 +7,7 @@ The chart points at this module via serveConfig.import_path:
 """
 
 import importlib.metadata
+import logging
 from typing import Annotated
 
 from fastapi import FastAPI, HTTPException, Request, Security
@@ -21,7 +22,6 @@ from privacy_filter.core.classes import (
     Span,
 )
 from privacy_filter.core.config import env
-from privacy_filter.core.logger import logger, setup_logger
 from privacy_filter.core.masking import MASK_TOKENS as MASK_TOKENS
 from privacy_filter.core.masking import mask_text as _mask_text
 from privacy_filter.core.utils import authorize_request
@@ -29,17 +29,20 @@ from privacy_filter.core.utils import authorize_request
 privacy_filter_version = importlib.metadata.version("privacy-filter")
 
 app = FastAPI(title="privacy-filter", version="0.1.0")
+_log = logging.getLogger(__name__)
 
 
 @serve.deployment(ray_actor_options={"num_cpus": 2})
 @serve.ingress(app)
 class PrivacyFilterService:
     def __init__(self) -> None:
+        from privacy_filter.core.logger import logger, setup_logger
+
         setup_logger()
 
         from transformers import pipeline
 
-        logger.info("loading privacy-filter model_id=%s", env.MODEL_ID)
+        _log.info("loading privacy-filter model_id=%s", env.MODEL_ID)
         self.classifier = pipeline(
             task="token-classification",
             model=env.MODEL_ID,
@@ -47,7 +50,7 @@ class PrivacyFilterService:
             device=-1,
         )
         self._ready = True
-        logger.info("privacy-filter model loaded")
+        _log.info("privacy-filter model loaded")
 
     def _classify_one(self, text: str, threshold: float) -> FilterResult:
         raw = self.classifier(text)
@@ -67,7 +70,7 @@ class PrivacyFilterService:
     @app.exception_handler(HTTPException)
     async def log_and_handle_http_exception(request: Request, exc: HTTPException):
         """Logs HTTPExceptions"""
-        logger.error(
+        _log.error(
             f"HTTPException for {request.method} {request.url.path} -> status={exc.status_code} detail={exc.detail}",
         )
         return await http_exception_handler(request, exc)
