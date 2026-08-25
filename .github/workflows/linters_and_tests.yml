@@ -69,23 +69,3 @@ jobs:
 
       - name: Verify docs are up to date
         run: git diff --exit-code -- docs/index.html
-
-  smoke-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install uv
-        run: pip install uv==0.10.8
-
-      - name: Sync dependencies
-        run: |
-          uv venv
-          uv sync --all-groups
-          uv pip install --no-cache-dir -e .
