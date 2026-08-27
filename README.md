@@ -47,7 +47,7 @@ docker run --rm -p 8080:8080 privacy-filter:local
 ## Configuration
 
 `MODEL_ID` changes the model loaded by the Serve actor. It defaults to `openai/privacy-filter`.
-`MASTER_KEY` sets the API key required by `POST /filter`.
+`MASTER_KEY` sets the API key required by `POST /privacy-filter`.
 
 ```bash
 MASTER_KEY=sk-default MODEL_ID=openai/privacy-filter make serve
@@ -65,7 +65,7 @@ curl http://localhost:8080/readyz
 Filter text:
 
 ```bash
-curl -X POST http://localhost:8080/filter \
+curl -X POST http://localhost:8080/privacy-filter \
   -H "content-type: application/json" \
   -H "x-pf-api-key: $MASTER_KEY" \
   -d '{
@@ -75,7 +75,7 @@ curl -X POST http://localhost:8080/filter \
   }'
 ```
 
-`POST /filter` requires the `x-pf-api-key` header. Its value must match the
+`POST /privacy-filter` requires the `x-pf-api-key` header. Its value must match the
 service `MASTER_KEY` environment variable. Health check endpoints do not require
 an API key.
 

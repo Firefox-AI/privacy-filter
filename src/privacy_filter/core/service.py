@@ -75,8 +75,8 @@ class PrivacyFilterService:
         )
         return await http_exception_handler(request, exc)
 
-    @app.post("/filter", responses={401: {"description": "Invalid API key"}})
-    async def filter(
+    @app.post("/privacy-filter", responses={401: {"description": "Invalid API key"}})
+    async def privacy_filter(
         self, req: Annotated[FilterRequest, Security(authorize_request)]
     ) -> FilterResponse:
         """Filter text for PII spans.
