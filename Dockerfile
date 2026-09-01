@@ -41,10 +41,6 @@ USER ray
 RUN python -c "from transformers import pipeline; \
     pipeline(task='token-classification', model='openai/privacy-filter')"
 
-# Runtime should use the baked model cache instead of checking Hugging Face.
-ENV HF_HUB_OFFLINE=1 \
-    TRANSFORMERS_OFFLINE=1
-
 COPY --chown=1000:1000 src/privacy_filter ./privacy_filter
 
 EXPOSE 8000 8080 8265
