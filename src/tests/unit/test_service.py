@@ -1,3 +1,5 @@
+import importlib.metadata
+
 from privacy_filter.core.classes import Span
 from privacy_filter.core.masking import mask_text
 
@@ -59,3 +61,21 @@ def test_mask_text_combines_adjacent_duplicate_placeholders() -> None:
     ]
 
     assert mask_text(text, spans) == "[PRIVATE_PERSON] is a man"
+
+
+def test_documented_ray_serve_import_path_exports_deployment() -> None:
+    from privacy_filter.core.service import deployment
+    from privacy_filter.service import deployment as documented_deployment
+
+    assert documented_deployment is deployment
+
+
+def test_privacy_filter_version_falls_back_without_package_metadata(monkeypatch):
+    from privacy_filter.core import service
+
+    def missing(_distribution_name: str) -> str:
+        raise importlib.metadata.PackageNotFoundError
+
+    monkeypatch.setattr(service.importlib.metadata, "version", missing)
+
+    assert service._get_privacy_filter_version() == "0.0.0"

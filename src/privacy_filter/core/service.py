@@ -26,7 +26,15 @@ from privacy_filter.core.masking import MASK_TOKENS as MASK_TOKENS
 from privacy_filter.core.masking import mask_text as _mask_text
 from privacy_filter.core.utils import authorize_request
 
-privacy_filter_version = importlib.metadata.version("privacy-filter")
+
+def _get_privacy_filter_version() -> str:
+    try:
+        return importlib.metadata.version("privacy-filter")
+    except importlib.metadata.PackageNotFoundError:
+        return "0.0.0"
+
+
+privacy_filter_version = _get_privacy_filter_version()
 
 app = FastAPI(title="privacy-filter", version="0.1.0")
 _log = logging.getLogger(__name__)
