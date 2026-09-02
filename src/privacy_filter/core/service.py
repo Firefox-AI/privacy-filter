@@ -83,8 +83,9 @@ class PrivacyFilterService:
         )
         return await http_exception_handler(request, exc)
 
+    # Don't use async here - allows Ray to manage worker threadpools
     @app.post("/privacy-filter", responses={401: {"description": "Invalid API key"}})
-    async def privacy_filter(
+    def privacy_filter(
         self, req: Annotated[FilterRequest, Security(authorize_request)]
     ) -> FilterResponse:
         """Filter text for PII spans.
